@@ -35,6 +35,7 @@ of 100 arbitrary units::
   pbar = initBar("title")
   pbar(10)  # update % to 10%
   pbar(20)  # update % to 20%
+  pbar(15)  # simulate Microsoft progress effects
   
   del pbar  # move bar to final 100% and write the newline
 
