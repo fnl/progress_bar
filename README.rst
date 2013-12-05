@@ -58,6 +58,6 @@ both from the standard library.
 Copyright and License
 =====================
 
-License: `Apache License v2 <https://www.apache.org/licenses/LICENSE-2.0.html>`_
+License: `Apache License v2 <https://www.apache.org/licenses/LICENSE-2.0.html>`_.
 Copyright 2007-2013 Florian Leitner. All rights reserved.
 
