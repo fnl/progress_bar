@@ -12,6 +12,8 @@ import stat
 import sys
 
 ### PROGRESS BAR ###
+__author__ = "Florian Leitner <florian.leitner@gmail.com>"
+__version__ = "1"
 
 
 def __termios(fd):
