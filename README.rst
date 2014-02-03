@@ -6,23 +6,21 @@ a module to display progress bars in terminals
 ----------------------------------------------
 
 A simple way of providing an informative and clean progress bar on the
-terminal that respects the terminal's width, has a header, and the
-current %age for Python 2.6+ and 3.0+
+terminal that *knows a terminal's current width*, has a header, works *out
+of the box* when *reading files*, and always shows a relative percentage;
+progress_bar works for Python 2.6+ and 3.0+
 
 Synopsis
 ========
 
 ::
 
-                       reading names.dmp                     
-    [========================79.3%===============>          ]
+    file.txt: [========================79.3%===============>          ]
 
 Installation
 ============
 
-::
-
-  pip install progress_bar
+``pip install progress_bar``
 
 Usage
 =====
@@ -30,9 +28,9 @@ Usage
 Generally, to create any kind of progress bar with a default "size"
 of 100 arbitrary units::
 
-  from progress_bar import initBar
+  from progress_bar import InitBar
 
-  pbar = initBar("title")
+  pbar = InitBar()
   pbar(10)  # update % to 10%
   pbar(20)  # update % to 20%
   pbar(15)  # simulate Microsoft progress effects
@@ -42,19 +40,33 @@ of 100 arbitrary units::
 To easily create a progress bar for reporting (reading) progress in a
 filehandle that can ``tell()`` its offset::
 
-  from progress_bar import initBarForInfile
+  from progress_bar import InitBarForInfile
 
-  pbar = initBarForInfile("path")
-  instream = open("path")
+  pbar = InitBarForInfile("path/to/file.txt")
+  instream = open("path/to/file.txt")
 
-  for line in instream:
+  for line in iter(instream.readline, ''):
     pbar(instream.tell())
 
   del pbar
 
 With those default arguments, the bar will be as wide as the terminal window.
-Terminal window width is defined by ``termios`` using ``fcntl``,
-both from the standard library.
+However, it will leave to characters space on both sides to achieve a visually
+more appealing display. Terminal window width is defined by ``termios`` using
+``fcntl``, both from the standard library. The progress bar will be prefixed
+with the *basename* of the input file ("file.txt" in the above example).
+
+Version History
+===============
+
+- 5: fixed a few rough edges from the last update
+- 4: made the bars with titles one-liners and fixed functions names (FunctionNames,
+  ClassNames, methodNames, variable_names) because the PEP8 convention of using
+  "snake_case" for nearly all names makes no sense to me what-so-ever...
+  Finally, fixed the documentation to reflect Sphinx standards.
+- 3: fixed the version number so PEP426 issues are avoided (pip install now works...)
+- 2: updated the readme/usage section to reflect tell() issues with Python3
+- 1: initial release
 
 Copyright and License
 =====================

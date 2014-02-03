@@ -8,7 +8,7 @@ except IOError:
 
 setup(
     name='progress_bar',
-    version='1',
+    version='5.0',
     license='Apache License v2',
     author='Florian Leitner',
     author_email='florian.leitner@gmail.com',
@@ -19,7 +19,7 @@ setup(
     classifiers=[
         'Development Status :: 4 - Beta',
         'Environment :: Console',
-        'License :: OSI Approved :: Apache License v2',
+        'License :: OSI Approved :: Apache Software License',
         'Operating System :: POSIX',
         'Programming Language :: Python :: 2',
         'Programming Language :: Python :: 3',

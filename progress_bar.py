@@ -11,13 +11,13 @@ import os
 import stat
 import sys
 
-### PROGRESS BAR ###
 __author__ = "Florian Leitner <florian.leitner@gmail.com>"
-__version__ = "1"
+__version__ = "5"
+### PROGRESS BAR ###
 
 
 def __termios(fd):
-    """ Try to discover terminal width with fcntl, struct and termios. """
+    """Try to discover terminal width with fcntl, struct and termios."""
     #noinspection PyBroadException
     try:
         import fcntl
@@ -31,7 +31,7 @@ def __termios(fd):
 
 
 def __curses():
-    """ Try to discover terminal width with curses library. """
+    """Try to discover terminal width with curses library."""
     #noinspection PyBroadException
     try:
         import curses
@@ -42,8 +42,8 @@ def __curses():
     return cr
 
 
-def terminalSize():
-    """ Returns the terminal size as a (columns, rows) tuple. """
+def TerminalSize():
+    """Returns the terminal size as a (columns, rows) tuple."""
     cr = __termios(0) or __termios(1) or __termios(2)
     if cr:
         logging.debug("terminal size from termios")
@@ -72,43 +72,50 @@ def terminalSize():
 
 
 class ProgressBar(object):
-    """Create a text-based progress bar.
+    """
+    Create a text-based progress bar.
 
-    Call the object to see the progress bar, which looks something like this:
+    Call the object to see the progress bar, which looks something like this::
 
-    [=======>        22%                  ]
+        heading: [=======>        22%                  ]
 
     You may specify the progress bar's width, min and max values on init.
 
-    Usage Example (filling 21% of all 100):
-    >>> bar = ProgressBar(offset=2, total_width=50)
+    Usage Example (filling 21% of all 100)::
+
+    >>> bar = ProgressBar("heading", offset=2, total_width=50)
     >>> for i in range(22):
     ...     bar(i)
     ...
-      [=========>           21%                    ]
+      heading: [=========>           21%                    ]
     """
 
-    def __init__(self, min_value=0, max_value=100, offset=0,
+    def __init__(self, title: str="", min_value=0, max_value=100, offset=0,
                  total_width=80, stream=sys.stderr):
-        """Initialize a new progress bar.
+        """
+        Initialize a new progress bar.
 
-        min_value -> the absolute starting value of the bar
-        max_value -> the absolute end value for the bar
-        (both values are used to calculate the relative precentage value)
-        offset -> how far the bar should be set off from the left and
-                  right of the total_width of the terminal
-        total_width -> of the bar, usually set this as wide as the terminal
-                       and including the offset
+        :param title: a title string to be placed before the actual bar
+        :param min_value: the absolute starting value of the bar
+                          (used to calculate the relative precentage value)
+        :param max_value: the absolute end value for the bar
+                          (used to calculate the relative precentage value)
+        :param offset: how far the bar should be set off from the left and
+                       right of the total_width of the terminal
+        :param total_width: of the bar, usually set this as wide as the
+                            terminal and including the offset
         """
         self.logger = logging.getLogger("ProgressBar")
-        self.prog_bar = None  # stores the latest progress bar string
-        self.arrow = None  # stores the latest arrow of the bar
-        self.percent = ""  # stores the latest percentage value string
+        self.prog_bar = None   # stores the latest progress bar string
+        self.arrow = None      # stores the latest arrow of the bar
+        self.percent = ""      # stores the latest percentage value string
+        self.title = title + ": " if len(title) else ""
         if max_value < min_value:
             max_value = min_value
         self.min = min_value
         self.max = max_value
         self.width = total_width - (2 * offset) - 2  # -2 for surr. brackets
+        self.width -= len(self.title)  # 2 for the ": "
         assert self.width > 3, "progress bar size too small"
         # if not __DEBUG__, rescue what we can
         if self.width < 3 and offset > 0:
@@ -148,7 +155,8 @@ class ProgressBar(object):
         return percent_string
 
     def updateAmount(self, amount=0):
-        """Update the progress bar to the new position/amount.
+        """
+        Update the progress bar to the new position/amount.
 
         If new_amount is greater or less than max_value or min_value, set at
         intialization, respectively, it uses these values.
@@ -166,7 +174,7 @@ class ProgressBar(object):
 
         if percent == self.percent:
             # if we are still at the same percentage, just return the old bar
-            return "%s%s" % (" " * self.offset, self.prog_bar)
+            return "%s%s%s" % (" " * self.offset, self.title, self.prog_bar)
         else:
             self.percent = percent
 
@@ -174,7 +182,7 @@ class ProgressBar(object):
             # if the width is really small, the "bar" is only an integer
             # without most of the fancy stuff
             self.prog_bar = "%3i" % int(percent)
-            return "%s%s" % (" " * self.offset, self.prog_bar)
+            return "%s%s%s" % (" " * self.offset, self.title, self.prog_bar)
 
         if arrow != self.arrow:
             # (Re-) Build the progress bar if the arrow length has changed
@@ -198,16 +206,18 @@ class ProgressBar(object):
                  self.prog_bar[pos + len(percent):])
         else:
             self.prog_bar = percent
-        return "%s%s" % (" " * self.offset, self.prog_bar)
+        return "%s%s%s" % (" " * self.offset, self.title, self.prog_bar)
 
     def __str__(self):
-        """Return the latest progress bar string defined by the last
-        updateAmount() call.
         """
-        return str(self.prog_bar)
+        Return the latest progress bar string defined by the last
+        ``updateAmount()`` call.
+        """
+        return self.prog_bar
 
     def __call__(self, value):
-        """Update the amount to value and write the bar to stream.
+        """
+        Update the amount to value and write the bar to stream.
 
         Prints a carriage return first, so it will overwrite the current
         line in the stream.
@@ -222,45 +232,46 @@ class ProgressBar(object):
             self.stream.write('\n')
 
 
-def initBar(title: str, size: int=100, offset: int=2,
+def InitBar(title: str=None, size: int=100, offset: int=2,
             stream: IOBase=sys.stderr) -> ProgressBar:
-    """Initialize a new progess bar for a terminal with title.
-
-    The width of the bar will be equal to the terminalSize() - offset.
-
-    size -- the max_value of the ProgressBar
-    offset -- of the bar to the left and right
-    stream -- to print the title and bar to
     """
-    width = terminalSize()[0]
-    pbar = ProgressBar(max_value=size, offset=offset,
+    Initialize a new progess bar for a terminal with title.
+
+    The width of the bar will be equal to the TerminalSize() - offset.
+
+    :param title: an optional title string prefixing the bar
+    :param size: the max. (update) value setting ProgressBar.max_value
+    :param offset: of the bar to the left and right of the terminal
+    :param stream: to print the progress bar an (default: STDERR)
+    """
+    width = TerminalSize()[0]
+    pbar = ProgressBar(title=title, max_value=size, offset=offset,
                        total_width=width, stream=stream)
-    pbar.stream.write('\n')
-    pbar.stream.write(title.center(width))
-    pbar.stream.write('\n')
     return pbar
 
 
-def initBarForInfile(filename: str, offset: int=2,
+def InitBarForInfile(filename: str, offset: int=2,
                      stream: IOBase=sys.stderr) -> ProgressBar:
-    """Initialize a new progress bar for a terminal for reading a given
+    """
+    Initialize a new progress bar for a terminal for reading a given
     input file (path).
 
-    Example:
+    The basename of the file will be used as title.
 
-    ...
-    progress_bar = initBarForInfile(filename)
-    filehandle = open(filename)
-    ...
+    Example::
 
-    for line in filehandle:
-        progress_bar(filehandle.tell())
+        ...
+        progress_bar = initBarForInfile(filename)
+        filehandle = open(filename)
         ...
 
-    del progress_bar
-    ...
+        for line in filehandle:
+            progress_bar(filehandle.tell())
+            ...
+
+        del progress_bar
+        ...
     """
     size = os.stat(filename)[stat.ST_SIZE]
-    return initBar(
-        "reading %s" % filename, size=size, offset=offset, stream=stream
-    )
+    title = os.path.basename(filename)
+    return InitBar(title, size, offset, stream)
