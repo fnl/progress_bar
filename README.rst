@@ -59,6 +59,7 @@ with the *basename* of the input file ("file.txt" in the above example).
 Version History
 ===============
 
+- 6: removed remaining function annotations (Py2.7; thanks to Adam Knight)
 - 5: fixed a few rough edges from the last update
 - 4: made the bars with titles one-liners and fixed functions names (FunctionNames,
   ClassNames, methodNames, variable_names) because the PEP8 convention of using

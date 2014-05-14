@@ -5,14 +5,13 @@
 .. moduleauthor:: Florian Leitner <florian.leitner@gmail.com>
 .. License: Apache License v2
 """
-from io import IOBase
 import logging
 import os
 import stat
 import sys
 
 __author__ = "Florian Leitner <florian.leitner@gmail.com>"
-__version__ = "5"
+__version__ = "6"
 ### PROGRESS BAR ###
 
 
@@ -90,7 +89,7 @@ class ProgressBar(object):
       heading: [=========>           21%                    ]
     """
 
-    def __init__(self, title: str="", min_value=0, max_value=100, offset=0,
+    def __init__(self, title="", min_value=0, max_value=100, offset=0,
                  total_width=80, stream=sys.stderr):
         """
         Initialize a new progress bar.
@@ -161,8 +160,7 @@ class ProgressBar(object):
         If new_amount is greater or less than max_value or min_value, set at
         intialization, respectively, it uses these values.
         """
-        # Ensure we are not over min or max and are not doing the same thing
-        # twice
+        # ensure not over min or max and not doing the same thing twice
         if amount < self.min:
             amount = self.min
         if amount > self.max:
@@ -173,7 +171,7 @@ class ProgressBar(object):
         percent = self._percentString(fraction)
 
         if percent == self.percent:
-            # if we are still at the same percentage, just return the old bar
+            # if still at the same percentage, just return the old bar
             return "%s%s%s" % (" " * self.offset, self.title, self.prog_bar)
         else:
             self.percent = percent
@@ -185,7 +183,7 @@ class ProgressBar(object):
             return "%s%s%s" % (" " * self.offset, self.title, self.prog_bar)
 
         if arrow != self.arrow:
-            # (Re-) Build the progress bar if the arrow length has changed
+            # (re-) build the progress bar if the arrow length has changed
             self.arrow = arrow
             size = len(arrow)
             if size == 0 and fraction == 0.0:
@@ -196,14 +194,14 @@ class ProgressBar(object):
                 self.prog_bar = "[%s>%s]" % (arrow,
                                              ' ' * (self.width - size - 1))
 
-        # Figure out where to put the percentage, roughly centered
+        # place the percentage (pos) roughly centered
         pos = int(len(self.prog_bar) / 2 - len(percent) / 2)
 
-        # Slice the percentage into the bar
+        # slice the percentage into the bar
         if pos > 0:
-            self.prog_bar = "%s%s%s" % \
-                (self.prog_bar[0:pos], percent,
-                 self.prog_bar[pos + len(percent):])
+            self.prog_bar = "%s%s%s" % (
+                self.prog_bar[0:pos], percent, self.prog_bar[pos + len(percent):]
+            )
         else:
             self.prog_bar = percent
         return "%s%s%s" % (" " * self.offset, self.title, self.prog_bar)
@@ -232,8 +230,7 @@ class ProgressBar(object):
             self.stream.write('\n')
 
 
-def InitBar(title: str=None, size: int=100, offset: int=2,
-            stream: IOBase=sys.stderr) -> ProgressBar:
+def InitBar(title=None, size=100, offset=2, stream=sys.stderr):
     """
     Initialize a new progess bar for a terminal with title.
 
@@ -250,8 +247,7 @@ def InitBar(title: str=None, size: int=100, offset: int=2,
     return pbar
 
 
-def InitBarForInfile(filename: str, offset: int=2,
-                     stream: IOBase=sys.stderr) -> ProgressBar:
+def InitBarForInfile(filename, offset=2, stream=sys.stderr):
     """
     Initialize a new progress bar for a terminal for reading a given
     input file (path).

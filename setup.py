@@ -4,16 +4,16 @@ try:
     with open('README.rst') as file:
             long_description = file.read()
 except IOError:
-    long_description = "a module to display progress bars in terminals"
+    long_description = "An annotated, single-line progress bar for terminals."
 
 setup(
     name='progress_bar',
-    version='5.0',
+    version='6.0',
     license='Apache License v2',
     author='Florian Leitner',
     author_email='florian.leitner@gmail.com',
     url='https://github.com/fnl/progress_bar',
-    description='A progress bar for command line tools.',
+    description='An annotated, single-line progress bar for terminals.',
     long_description=long_description,
     py_modules=['progress_bar'],
     classifiers=[
