@@ -26,7 +26,9 @@ Usage
 =====
 
 Generally, to create any kind of progress bar with a default "size"
-of 100 arbitrary units::
+of 100 arbitrary units:
+
+.. code-block:: python
 
   from progress_bar import InitBar
 
@@ -39,7 +41,9 @@ of 100 arbitrary units::
   del pbar  # write the newline
 
 To easily create a progress bar for reporting (reading) progress in a
-filehandle that can ``tell()`` its offset::
+filehandle that can ``tell()`` its offset:
+
+.. code-block:: python
 
   from progress_bar import InitBarForInfile
 
