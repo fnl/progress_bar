@@ -34,16 +34,17 @@ of 100 arbitrary units::
   pbar(10)  # update % to 10%
   pbar(20)  # update % to 20%
   pbar(15)  # simulate a Microsoft progress bar
+  pbar(100) # done
   
-  del pbar  # move bar to final 100% and write the newline
+  del pbar  # write the newline
 
 To easily create a progress bar for reporting (reading) progress in a
 filehandle that can ``tell()`` its offset::
 
   from progress_bar import InitBarForInfile
 
-  pbar = InitBarForInfile("path/to/file.txt")
-  instream = open("path/to/file.txt")
+  pbar = InitBarForInfile("./README.rst")
+  instream = open("./README.rst")
 
   for line in iter(instream.readline, ''):
     pbar(instream.tell())
@@ -60,6 +61,7 @@ above example).
 Version History
 ===============
 
+- 7: fixed error with InitBar when no title is given
 - 6: removed remaining function annotations (Py2.7; thanks to Adam Knight
   @ahknight)
 - 5: fixed a few rough edges from the last update

@@ -11,7 +11,6 @@ import stat
 import sys
 
 __author__ = "Florian Leitner <florian.leitner@gmail.com>"
-__version__ = "6"
 ### PROGRESS BAR ###
 
 
@@ -108,7 +107,10 @@ class ProgressBar(object):
         self.prog_bar = None   # stores the latest progress bar string
         self.arrow = None      # stores the latest arrow of the bar
         self.percent = ""      # stores the latest percentage value string
-        self.title = title + ": " if len(title) else ""
+        if not title:
+            self.title = ""
+        else:
+            self.title = title + ": "
         if max_value < min_value:
             max_value = min_value
         self.min = min_value
