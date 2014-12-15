@@ -8,7 +8,7 @@ except IOError:
 
 setup(
     name='progress_bar',
-    version='7',
+    version='8',
     license='Apache License v2',
     author='Florian Leitner',
     author_email='florian.leitner@gmail.com',
