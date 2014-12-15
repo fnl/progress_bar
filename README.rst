@@ -6,9 +6,13 @@ a module to display progress bars in terminals
 ----------------------------------------------
 
 A simple way of providing an informative and clean progress bar on the
-terminal that *knows a terminal's current width*, has a header, works *out
-of the box* when *reading files*, and always shows a relative percentage;
-progress_bar works for Python 2.6+ and 3.0+
+terminal that:
+
+- *knows a terminal's current width*
+- has a header
+- works *out of the box* when *reading files*
+- always shows a relative percentage
+- works for Python 2.6+ and 3.0+
 
 Synopsis
 ========
