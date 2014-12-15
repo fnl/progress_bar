@@ -69,6 +69,7 @@ above example).
 Version History
 ===============
 
+- 8: README improvements thanks to Marc Abramowitz, @msabramo
 - 7: fixed error with InitBar when no title is given
 - 6: removed remaining function annotations (Py2.7; thanks to Adam Knight
   @ahknight)
