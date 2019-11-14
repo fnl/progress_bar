@@ -61,6 +61,14 @@ def TerminalSize():
     if not cr:
         #noinspection PyBroadException
         try:
+            import subprocess
+            cr = subprocess.check_output('stty size').split();
+            logging.debug("terminal size from stty size")
+        except Exception:
+            pass
+    if not cr:
+        #noinspection PyBroadException
+        try:
             cr = (os.environ['LINES'], os.environ['COLUMNS'])
             logging.debug("terminal size from environment")
         except Exception:
