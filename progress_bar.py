@@ -230,6 +230,7 @@ class ProgressBar(object):
         """Add a newline to stream when deleting the bar."""
         if self.prog_bar is not None:
             self.stream.write('\n')
+            self.stream.flush()
 
 
 def InitBar(title=None, size=100, offset=2, stream=sys.stderr):
